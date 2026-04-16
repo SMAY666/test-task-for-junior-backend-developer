@@ -51,18 +51,11 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (*taskdomain.Ta
 	return created, nil
 }
 
-func (s *Service) GetByID(ctx context.Context, id int64) (*taskdomain.Task, error) {
-	if id <= 0 {
-		return nil, fmt.Errorf("%w: id must be positive", ErrInvalidInput)
-	}
-
+func (s *Service) GetByID(ctx context.Context, id string) (*taskdomain.Task, error) {
 	return s.repo.GetByID(ctx, id)
 }
 
-func (s *Service) Update(ctx context.Context, id int64, input UpdateInput) (*taskdomain.Task, error) {
-	if id <= 0 {
-		return nil, fmt.Errorf("%w: id must be positive", ErrInvalidInput)
-	}
+func (s *Service) Update(ctx context.Context, id string, input UpdateInput) (*taskdomain.Task, error) {
 
 	normalized, err := validateUpdateInput(input)
 	if err != nil {
@@ -92,11 +85,7 @@ func (s *Service) Update(ctx context.Context, id int64, input UpdateInput) (*tas
 	return updated, nil
 }
 
-func (s *Service) Delete(ctx context.Context, id int64) error {
-	if id <= 0 {
-		return fmt.Errorf("%w: id must be positive", ErrInvalidInput)
-	}
-
+func (s *Service) Delete(ctx context.Context, id string) error {
 	return s.repo.Delete(ctx, id)
 }
 

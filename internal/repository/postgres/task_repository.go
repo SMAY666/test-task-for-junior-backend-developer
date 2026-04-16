@@ -34,7 +34,7 @@ func (r *Repository) Create(ctx context.Context, task *taskdomain.Task) (*taskdo
 	return created, nil
 }
 
-func (r *Repository) GetByID(ctx context.Context, id int64) (*taskdomain.Task, error) {
+func (r *Repository) GetByID(ctx context.Context, id string) (*taskdomain.Task, error) {
 	const query = `
 		SELECT id, title, description, is_recurring, recurring, status, created_at, updated_at, executor_ids
 		FROM tasks
@@ -81,7 +81,7 @@ func (r *Repository) Update(ctx context.Context, task *taskdomain.Task) (*taskdo
 	return updated, nil
 }
 
-func (r *Repository) Delete(ctx context.Context, id int64) error {
+func (r *Repository) Delete(ctx context.Context, id string) error {
 	const query = `DELETE FROM tasks WHERE id = $1`
 
 	result, err := r.pool.Exec(ctx, query, id)

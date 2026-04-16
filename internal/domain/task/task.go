@@ -32,13 +32,13 @@ type Recurring struct {
 }
 
 type Task struct {
-	ID          int64      `json:"id"`
+	ID          string     `json:"id"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	IsRecurring bool       `json:"is_recurring"`
 	Recurring   *Recurring `json:"recurring"`
 	Status      Status     `json:"status"`
-	ExecutorIds []int32    `json:"executor_ids"`
+	ExecutorIds []string   `json:"executor_ids"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 }

@@ -12,17 +12,17 @@ type taskMutationDTO struct {
 	IsRecurring bool                  `json:"is_recurring"`
 	Recurring   *taskdomain.Recurring `json:"recurring"`
 	Status      taskdomain.Status     `json:"status"`
-	ExecutorIds []int32               `json:"executor_ids"`
+	ExecutorIds []string              `json:"executor_ids"`
 }
 
 type taskDTO struct {
-	ID          int64                 `json:"id"`
+	ID          string                `json:"id"`
 	Title       string                `json:"title"`
 	Description string                `json:"description"`
 	IsRecurring bool                  `json:"is_recurring"`
 	Recurring   *taskdomain.Recurring `json:"recurring"`
 	Status      taskdomain.Status     `json:"status"`
-	ExecutorIds []int32               `json:"executor_ids"`
+	ExecutorIds []string              `json:"executor_ids"`
 	CreatedAt   time.Time             `json:"created_at"`
 	UpdatedAt   time.Time             `json:"updated_at"`
 }

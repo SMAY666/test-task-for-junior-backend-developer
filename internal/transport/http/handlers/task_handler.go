@@ -118,22 +118,22 @@ func (h *TaskHandler) List(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, response)
 }
 
-func getIDFromRequest(r *http.Request) (int64, error) {
+func getIDFromRequest(r *http.Request) (string, error) {
 	rawID := mux.Vars(r)["id"]
 	if rawID == "" {
-		return 0, errors.New("missing task id")
+		return "", errors.New("missing task id")
 	}
 
 	id, err := strconv.ParseInt(rawID, 10, 64)
 	if err != nil {
-		return 0, errors.New("invalid task id")
+		return "", errors.New("invalid task id")
 	}
 
 	if id <= 0 {
-		return 0, errors.New("invalid task id")
+		return "", errors.New("invalid task id")
 	}
 
-	return id, nil
+	return strconv.FormatInt(id, 10), nil
 }
 
 func decodeJSON(r *http.Request, dst any) error {

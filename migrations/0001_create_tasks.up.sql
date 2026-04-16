@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     is_recurring BOOLEAN,
     recurring JSON,
 	status TEXT NOT NULL,
-    executor_ids INTEGER[],
+    executor_ids TEXT[],
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 	updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
