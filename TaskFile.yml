@@ -1,0 +1,38 @@
+version: "3"
+
+vars:
+  APP_NAME: taskservice
+  MAIN_PKG: ./cmd/api
+
+tasks:
+  run:
+    desc: "Запуск сервиса локально"
+    cmds:
+      - go run {{.MAIN_PKG}}
+
+  build:
+    desc: "Собрать бинарь"
+    cmds:
+      - mkdir -p bin
+      - go build -o bin/{{.APP_NAME}} {{.MAIN_PKG}}
+
+  docker:up:
+    desc: "Запуск через Docker Compose (app + postgres)"
+    cmds:
+      - docker compose up -d --build
+
+  docker:down:
+    desc: "Остановка Docker Compose"
+    cmds:
+      - docker compose down
+
+  docker:clear:
+    desc: "Остановка Docker Compose и удаление данных postgres"
+    cmds:
+      - docker compose down -v
+  # Быстрый рестарт Docker-окружения
+  docker:restart:
+    desc: "Перезапуск Docker Compose"
+    cmds:
+      - task docker:down
+      - task docker:up
