@@ -20,12 +20,12 @@ func New(pool *pgxpool.Pool) *Repository {
 
 func (r *Repository) Create(ctx context.Context, task *taskdomain.Task) (*taskdomain.Task, error) {
 	const query = `
-		INSERT INTO tasks (title, description, status, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5)
-		RETURNING id, title, description, status, created_at, updated_at
+		INSERT INTO tasks (title, description, is_recurring, recurring, status/*, created_at, updated_at*/, executor_ids)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id, title, description, is_recurring, recurring, status, created_at, updated_at, executor_ids
 	`
 
-	row := r.pool.QueryRow(ctx, query, task.Title, task.Description, task.Status, task.CreatedAt, task.UpdatedAt)
+	row := r.pool.QueryRow(ctx, query, task.Title, task.Description, task.IsRecurring, task.Recurring, task.Status /*, task.CreatedAt, task.UpdatedAt*/, task.ExecutorIds)
 	created, err := scanTask(row)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (r *Repository) Create(ctx context.Context, task *taskdomain.Task) (*taskdo
 
 func (r *Repository) GetByID(ctx context.Context, id int64) (*taskdomain.Task, error) {
 	const query = `
-		SELECT id, title, description, status, created_at, updated_at
+		SELECT id, title, description, is_recurring, recurring, status, created_at, updated_at, executor_ids
 		FROM tasks
 		WHERE id = $1
 	`
@@ -59,13 +59,16 @@ func (r *Repository) Update(ctx context.Context, task *taskdomain.Task) (*taskdo
 		UPDATE tasks
 		SET title = $1,
 			description = $2,
-			status = $3,
-			updated_at = $4
-		WHERE id = $5
-		RETURNING id, title, description, status, created_at, updated_at
+			is_recurring = $3,
+			recurring = $4,
+			status = $5,
+			updated_at = $6,
+			executor_ids = $7
+		WHERE id = $8
+		RETURNING id, title, description, is_recurring, recurring, status, created_at, updated_at, executor_ids
 	`
 
-	row := r.pool.QueryRow(ctx, query, task.Title, task.Description, task.Status, task.UpdatedAt, task.ID)
+	row := r.pool.QueryRow(ctx, query, task.Title, task.Description, task.IsRecurring, task.Recurring, task.Status, task.UpdatedAt, task.ExecutorIds, task.ID)
 	updated, err := scanTask(row)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -95,7 +98,7 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 
 func (r *Repository) List(ctx context.Context) ([]taskdomain.Task, error) {
 	const query = `
-		SELECT id, title, description, status, created_at, updated_at
+		SELECT id, title, description, is_recurring, recurring, status, created_at, updated_at, executor_ids
 		FROM tasks
 		ORDER BY id DESC
 	`
@@ -137,9 +140,12 @@ func scanTask(scanner taskScanner) (*taskdomain.Task, error) {
 		&task.ID,
 		&task.Title,
 		&task.Description,
+		&task.IsRecurring,
+		&task.Recurring,
 		&status,
 		&task.CreatedAt,
 		&task.UpdatedAt,
+		&task.ExecutorIds,
 	); err != nil {
 		return nil, err
 	}
