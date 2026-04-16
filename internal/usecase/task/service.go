@@ -35,6 +35,10 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (*taskdomain.Ta
 		Status:      normalized.Status,
 		ExecutorIds: normalized.ExecutorIds,
 	}
+
+	if !model.IsRecurring {
+		model.Recurring = nil
+	}
 	now := s.now()
 	model.CreatedAt = now
 	model.UpdatedAt = now
@@ -74,6 +78,10 @@ func (s *Service) Update(ctx context.Context, id int64, input UpdateInput) (*tas
 		Status:      normalized.Status,
 		ExecutorIds: normalized.ExecutorIds,
 		UpdatedAt:   s.now(),
+	}
+
+	if !model.IsRecurring {
+		model.Recurring = nil
 	}
 
 	updated, err := s.repo.Update(ctx, model)
