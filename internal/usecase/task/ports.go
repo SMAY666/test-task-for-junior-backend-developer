@@ -25,11 +25,17 @@ type Usecase interface {
 type CreateInput struct {
 	Title       string
 	Description string
+	IsRecurring bool
+	Recurring   *taskdomain.Recurring
 	Status      taskdomain.Status
+	ExecutorIds []int32
 }
 
 type UpdateInput struct {
 	Title       string
 	Description string
+	IsRecurring bool
+	Recurring   *taskdomain.Recurring
 	Status      taskdomain.Status
+	ExecutorIds []int32
 }
