@@ -30,7 +30,10 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (*taskdomain.Ta
 	model := &taskdomain.Task{
 		Title:       normalized.Title,
 		Description: normalized.Description,
+		IsRecurring: normalized.IsRecurring,
+		Recurring:   normalized.Recurring,
 		Status:      normalized.Status,
+		ExecutorIds: normalized.ExecutorIds,
 	}
 	now := s.now()
 	model.CreatedAt = now
@@ -66,7 +69,10 @@ func (s *Service) Update(ctx context.Context, id int64, input UpdateInput) (*tas
 		ID:          id,
 		Title:       normalized.Title,
 		Description: normalized.Description,
+		IsRecurring: normalized.IsRecurring,
+		Recurring:   normalized.Recurring,
 		Status:      normalized.Status,
+		ExecutorIds: normalized.ExecutorIds,
 		UpdatedAt:   s.now(),
 	}
 
@@ -105,6 +111,12 @@ func validateCreateInput(input CreateInput) (CreateInput, error) {
 	if !input.Status.Valid() {
 		return CreateInput{}, fmt.Errorf("%w: invalid status", ErrInvalidInput)
 	}
+	if input.IsRecurring {
+		err := input.Recurring.Valid()
+		if err != nil {
+			return CreateInput{}, err
+		}
+	}
 
 	return input, nil
 }
@@ -119,6 +131,13 @@ func validateUpdateInput(input UpdateInput) (UpdateInput, error) {
 
 	if !input.Status.Valid() {
 		return UpdateInput{}, fmt.Errorf("%w: invalid status", ErrInvalidInput)
+	}
+
+	if input.IsRecurring {
+		err := input.Recurring.Valid()
+		if err != nil {
+			return UpdateInput{}, err
+		}
 	}
 
 	return input, nil

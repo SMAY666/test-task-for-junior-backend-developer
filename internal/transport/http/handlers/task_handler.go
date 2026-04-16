@@ -30,7 +30,10 @@ func (h *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 	created, err := h.usecase.Create(r.Context(), taskusecase.CreateInput{
 		Title:       req.Title,
 		Description: req.Description,
+		IsRecurring: req.IsRecurring,
+		Recurring:   req.Recurring,
 		Status:      req.Status,
+		ExecutorIds: req.ExecutorIds,
 	})
 	if err != nil {
 		writeUsecaseError(w, err)
@@ -72,7 +75,10 @@ func (h *TaskHandler) Update(w http.ResponseWriter, r *http.Request) {
 	updated, err := h.usecase.Update(r.Context(), id, taskusecase.UpdateInput{
 		Title:       req.Title,
 		Description: req.Description,
+		IsRecurring: req.IsRecurring,
+		Recurring:   req.Recurring,
 		Status:      req.Status,
+		ExecutorIds: req.ExecutorIds,
 	})
 	if err != nil {
 		writeUsecaseError(w, err)
