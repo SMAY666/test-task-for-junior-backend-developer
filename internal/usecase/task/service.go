@@ -120,10 +120,15 @@ func validateCreateInput(input CreateInput) (CreateInput, error) {
 		return CreateInput{}, fmt.Errorf("%w: invalid status", ErrInvalidInput)
 	}
 	if input.IsRecurring {
-		err := input.Recurring.Valid()
-		if err != nil {
+		if input.Recurring == nil {
+			return CreateInput{}, fmt.Errorf("%w: Recurring required", ErrInvalidInput)
+		}
+
+		if err := input.Recurring.Valid(); err != nil {
 			return CreateInput{}, err
 		}
+	} else {
+		input.Recurring = nil
 	}
 
 	return input, nil
@@ -142,10 +147,15 @@ func validateUpdateInput(input UpdateInput) (UpdateInput, error) {
 	}
 
 	if input.IsRecurring {
-		err := input.Recurring.Valid()
-		if err != nil {
+		if input.Recurring == nil {
+			return UpdateInput{}, fmt.Errorf("%w: Recurring required", ErrInvalidInput)
+		}
+
+		if err := input.Recurring.Valid(); err != nil {
 			return UpdateInput{}, err
 		}
+	} else {
+		input.Recurring = nil
 	}
 
 	return input, nil
