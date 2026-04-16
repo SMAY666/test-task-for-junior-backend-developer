@@ -169,6 +169,43 @@
             "type": "string",
             "enum": ["new", "in_progress", "done"],
             "example": "new"
+          },
+          "is_recurring": {
+            "type": "boolean"
+          },
+          "recurring": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["daily", "monthly", "dates", "evenOdd"]
+              },
+              "every_n_days": {
+                "type": "number"
+              },
+              "days_of_month": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 30
+                }
+              },
+              "dates": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "2026-04-17T02:01:00Z"
+                }
+              },
+              "odd": {
+                "type": "boolean"
+              }
+            }
+          },
+          "executor_ids": {
+            "type": "array",
+            "example": "[\"1\", \"2\", \"3\"]"
           }
         }
       },
@@ -188,6 +225,43 @@
             "type": "string",
             "enum": ["new", "in_progress", "done"],
             "example": "in_progress"
+          },
+          "is_recurring": {
+            "type": "boolean"
+          },
+          "recurring": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["daily", "monthly", "dates", "evenOdd"]
+              },
+              "every_n_days": {
+                "type": "number"
+              },
+              "days_of_month": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 30
+                }
+              },
+              "dates": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "2026-04-17T02:01:00Z"
+                }
+              },
+              "odd": {
+                "type": "boolean"
+              }
+            }
+          },
+          "executor_ids": {
+            "type": "array",
+            "example": "[\"1\", \"2\", \"3\"]"
           }
         }
       },
